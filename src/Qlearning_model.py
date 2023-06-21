@@ -314,7 +314,7 @@ def run_learning(model_name, hidden_size, num_games=1000000, pop_size=10, epsilo
     # plt.title(f"Reward {model_name}")
     # plt.plot(rewards)
 
-    with open(f'{model_name}.csv', 'w', newline='') as result:
+    with open(f'models/{model_name}.csv', 'w', newline='') as result:
         writer = csv.writer(result, delimiter=",", quoting=csv.QUOTE_NONNUMERIC)
         writer.writerows([
             loses_list,

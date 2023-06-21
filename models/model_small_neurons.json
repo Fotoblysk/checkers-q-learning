@@ -1,0 +1,6 @@
+{
+    "input_size": 32,
+    "output_size": 1024,
+    "hidden_layer_size": 8,
+    "model_path": "models/model_small_neurons.model"
+}
