@@ -59,8 +59,10 @@ class DQN(nn.Module):
 
         # save model
         torch.save(self.state_dict(), settings['model_path'])
-
+    @staticmethod
     def load(path):
+        import os
+        print(os.getcwd())
         with open(path, 'r') as file:
             settings = json.load(file)
             loaded_model = DQN(
@@ -72,9 +74,9 @@ class DQN(nn.Module):
             loaded_model.eval()
             return loaded_model
 
-    def select_action(self, state, epsilon=0.):
-        possible_actions = state.get_possible_moves()
-        player = state.whose_turn()
+    def select_action(self, game, epsilon=0.):
+        possible_actions = game.get_possible_moves()
+        player = game.whose_turn()
         mask = calc_mask(possible_actions)
 
         if np.random.rand() < epsilon:
@@ -84,7 +86,7 @@ class DQN(nn.Module):
         else:
             # select the action with the highest Q-value
             q_values = self(
-                torch.from_numpy(np.array(get_learnable_board(get_readable_board(state.board), player))).float(), mask)
+                torch.from_numpy(np.array(get_learnable_board(get_readable_board(game.board), player))).float(), mask)
             q_values.sort()
             start = q_values.argmax().item() // 32 + 1
             end = q_values.argmax().item() % 32 + 1
@@ -296,7 +298,7 @@ def run_learning(model_name, hidden_size, num_games=1000000, pop_size=10, epsilo
     running = True
     signal.signal(signal.SIGINT, original_sigint_handler)
 
-    network.save(model_name)
+    network.save(f"models/{model_name}")
 
     loses_list = [loss.item() for loss in losses]
     # plt.figure()

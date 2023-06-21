@@ -13,10 +13,11 @@ if __name__ == '__main__':
     if not os.path.exists('./plots'):
         os.makedirs('./plots')
 
-    files = find_csv_filenames('./')
+    CSV_PREFIX = 'models/'
+    files = find_csv_filenames(f'./{CSV_PREFIX}')
 
     for file_name in files:
-        with open(file_name, newline='') as csvfile:
+        with open(f"{CSV_PREFIX}{file_name}", newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
             data = [row for row in spamreader if len(row) > 0]
 
