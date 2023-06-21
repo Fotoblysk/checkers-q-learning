@@ -1,104 +1,20 @@
 # This is a sample Python script.
 import math
 import random
-import time
-import random
 from copy import deepcopy
 
 from checkers.game import Game
 
+from src.board_processing import get_hashable_state, print_board, get_random_move
 
-def get_readable_board(board):  # TODO fix mtcs and visu too
-    board_array = [0] * 32
-    for piece in sorted(board.pieces, key=lambda piece: piece.position if piece.position else 0):
-        if piece.position is not None:
-            if piece.king:
-                board_array[piece.position - 1] = (piece.player * 10)
-            else:
-                board_array[piece.position - 1] = (piece.player)
-    return board_array
-
-
-def get_hashable_state(game):  # probably we should also add some more data like possible moves is end ect.
-    return (tuple(get_readable_board(game.board)), game.whose_turn())
-
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-def print_board(board):
-    board_array = get_readable_board(board)
-
-    empty_positions = 32 - len(board_array)
-    for i in range(empty_positions):
-        board_array.append(0)
-
-    board_array_split = [[] for _ in range(8)]
-    for i, v in enumerate(board_array):
-        board_array_split[i // 4].append(v)
-
-    board_array_stringed = [[] for _ in range(8)]
-    for i in range(len(board_array_split)):
-        if i % 2 == 0:
-            for j in board_array_split[i]:
-                board_array_stringed[i].append(-1)
-                board_array_stringed[i].append(j)
-        else:
-            for j in board_array_split[i]:
-                board_array_stringed[i].append(j)
-                board_array_stringed[i].append(-1)
-
-    # for i in board_array_stringed:
-    #   print(i)
-
-    board_array_stringed_encoded = ''
-    for i in board_array_stringed:
-        for j in i:
-            if j == 1:
-                board_array_stringed_encoded += '♟ '
-            elif j == 2:
-                board_array_stringed_encoded += '♙ '
-            elif j == 10:
-                board_array_stringed_encoded += '♚ '
-            elif j == 20:
-                board_array_stringed_encoded += '♔ '
-            else:
-                board_array_stringed_encoded += '▭ '
-
-        board_array_stringed_encoded += '\n'
-
-    print(board_array_stringed_encoded)
-
-
-#        print(piece.player)  # 1 or 2
-#        print(piece.position)  # 1-32
-
-
-def scan_pieces(game):
-    for piece in game.board.pieces:
-        print(piece.position)  # 1-32
-        # print(piece.player)  # 1 or 2
-        #        print(piece.other_player)  # 1 or 2
-        #        print(piece.king)  # True or False
-        #        print(piece.captured)  # True or False
-
-
-#        print(piece.get_possible_capture_moves())  # [[int, int], [int, int], ...]
-#        print(piece.get_possible_positional_moves())  # [[int, int], [int, int], ...]
-
-def get_random_move(moves):
-    return random.randint(0, len(moves) - 1)
-
-
-### MCTS inpl
 table = dict()
-
-
+def get_table():
+    return table
 def clean_table():
     global table
     table = dict()
 
 
-# implement the playout function
 def playout(state: Game):
     while not state.is_over():
         moves = state.get_possible_moves()
@@ -108,7 +24,6 @@ def playout(state: Game):
         state.move(move)
 
 
-# implement the MCTS algorithm
 def monte_carlo_tree_search(game: Game, iterations=100):
     root = Node(game)
     for _ in range(iterations):
@@ -148,7 +63,6 @@ def monte_carlo_tree_search(game: Game, iterations=100):
     return selected_move
 
 
-# define a node in the MCTS tree
 class Node:
     def __init__(self, state: Game, move=None, parent=None):
         self.state = state
