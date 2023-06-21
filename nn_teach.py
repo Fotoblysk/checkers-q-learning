@@ -9,7 +9,7 @@ def main():
     ]
     for i in models:
         model_name, hidden_size = i
-        run_learning(model_name, hidden_size, num_games=2000)
+        run_learning(model_name, hidden_size, num_games=20000, mem_size=100000)
 
 
 if __name__ == "__main__":

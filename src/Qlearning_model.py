@@ -176,7 +176,7 @@ def signal_handler(sig, frame):
 
 
 def run_learning(model_name, hidden_size, num_games=1000000, pop_size=10, epsilon=0.005, mem_size=10000,
-                 discount_factor=0.995, batch_size=64 * 64):
+                 discount_factor=0.995, batch_size=64 * 2):
     original_sigint_handler = signal.getsignal(signal.SIGINT)
     global running
     losses = []
